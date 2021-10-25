@@ -5,7 +5,7 @@ const app = require("express")();
 const http = require("http").Server(app);
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:8000",
     methods: ["GET", "POST"],
   },
 });
@@ -21,10 +21,9 @@ io.on("connection", function (socket: Socket) {
   socket.on("disconnect", () => {
     console.log("disconnected");
   });
-  app.post("/api/gestures", (req: Request, res: Response) => {
-    console.log("moved");
+  socket.on("moved", (data) => {
+    console.log("moved", data);
     io.emit("moved");
-    res.status(200).send("ok");
   });
 });
 
