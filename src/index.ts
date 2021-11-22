@@ -10,8 +10,8 @@ const io = require("socket.io")(http, {
   },
 });
 
-const PORT = process.env.PORT || 5000;
-app.get("/", (req: Request, res: Response) => {
+const PORT = process.env.PORT || 8000;
+app.get("/test", (req: Request, res: Response) => {
   res.send("running");
 });
 
@@ -24,6 +24,16 @@ io.on("connection", function (socket: Socket) {
   socket.on("moved", (data) => {
     console.log("moved", data);
     io.emit("moved", data);
+  });
+
+  // 動作検証用
+  app.get("/test/next", (req: Request, res: Response) => {
+    io.emit("moved", { action: "next" });
+    res.send("next");
+  });
+  app.get("/test/prev", (req: Request, res: Response) => {
+    io.emit("moved", { action: "prev" });
+    res.send("prev");
   });
 });
 
